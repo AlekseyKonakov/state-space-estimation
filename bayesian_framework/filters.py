@@ -1397,11 +1397,11 @@ class BootstrapDataSet:
 
 
 class ResampleType(Enum):
-    unknown = 0,
-    residual = 1,
-    residual2 = 2,
-    multinomial = 3,
-    stratified = 4,
+    unknown = 0
+    residual = 1
+    residual2 = 2
+    multinomial = 3
+    stratified = 4
     systematic = 5
 
 

@@ -11,11 +11,11 @@ from enum import Enum
 
 
 class LinearizationType(Enum):
-    F = 1,  # F = df / dx
-    B = 2,  # B = df / du1
-    C = 3,  # C = dh / dx
-    D = 4,  # D = dh / du2
-    G = 5,  # G = df / dv
-    H = 6,  # H = dh / dn
-    JFW = 7,  # JFW =  df / dp
+    F = 1   # F = df / dx
+    B = 2   # B = df / du1
+    C = 3   # C = dh / dx
+    D = 4   # D = dh / du2
+    G = 5   # G = df / dv
+    H = 6   # H = dh / dn
+    JFW = 7  # JFW =  df / dp
     JHW = 8  # dh / dp

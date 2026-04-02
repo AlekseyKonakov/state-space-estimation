@@ -28,7 +28,6 @@ class CelestialBodyGravityInfo:
         self._state = kinematic_state
         self._mass = mass
 
-    @property
     def __str__(self):
         return f"Mass: {self._mass} kg;{linesep}Kinematic state: {self._state}"
 

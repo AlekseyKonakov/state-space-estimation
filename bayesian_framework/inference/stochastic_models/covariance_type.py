@@ -6,7 +6,7 @@ class CovarianceType(Enum):
     full = 1
     diag = 2
     sqrt = 3
-    sqrt_diag = 4,
+    sqrt_diag = 4
     svd = 5
 
 

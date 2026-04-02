@@ -161,18 +161,19 @@ class GammaStochasticModel(GeneralStochasticModel):
 
 class GaussianStochasticModel(GeneralStochasticModel):
     def __init__(self, *, mean, covariance, covariance_type):
-        if isinstance(mean, Sequence):
+        mean_arr = np.atleast_1d(np.asarray(mean))
+        if mean_arr.ndim >= 1 and mean_arr.size > 1:
             if not matrix_utils.is_square_2d_array(covariance):
                 raise Exception("Covariance matrix must be square matrix")
 
-            if len(mean) != matrix_utils.shape_square_2d_array(covariance):
+            if len(mean_arr) != matrix_utils.shape_square_2d_array(covariance):
                 raise Exception("Dimensions mismatch of mean and covariance matrix")
 
-            self._dimension = len(mean)
-            self._mean = np.asarray(mean)
+            self._dimension = len(mean_arr)
+            self._mean = mean_arr
         else:
             self._dimension = 1
-            self._mean = np.atleast_1d(mean)
+            self._mean = mean_arr
 
         is_diag = covariance_type in (CovarianceType.diag, CovarianceType.sqrt_diag)
         self._covariance_type = covariance_type
@@ -225,7 +226,7 @@ class GaussianStochasticModel(GeneralStochasticModel):
 
 class ComboGaussianStochasticModel(GeneralStochasticModel):
     def __init__(self, *, dimension, sources):
-        if not isinstance(sources, collections.Sequence):
+        if not isinstance(sources, Sequence):
             raise Exception("sources must be sequence")
 
         cov_type = sources[0].covariance_type
@@ -273,12 +274,12 @@ class ComboGaussianStochasticModel(GeneralStochasticModel):
 
     def sample(self, size: int) -> np.ndarray:
         return np.atleast_2d(
-            multivariate_normal.rvs(loc=self._mean, scale=self._covariance_full, size=size).T
+            multivariate_normal.rvs(mean=self._mean, cov=self._covariance_full, size=size).T
         )
 
     def likelihood(self, samples: np.ndarray) -> np.ndarray:
         return np.atleast_1d(
-            multivariate_normal.pdf(samples.T, loc=self._mean, scale=self._covariance_full)
+            multivariate_normal.pdf(samples.T, mean=self._mean, cov=self._covariance_full)
         )
 
     def update(self, **kwargs) -> NoReturn:
@@ -300,7 +301,7 @@ class ComboStochasticModel(ComboGaussianStochasticModel):
         return NoiseType.combo
 
     def sample(self, size: int) -> np.ndarray:
-        result = np.zeros((size, self.dim))
+        result = np.zeros((self.dim, size))
         shift = 0
 
         for source in self._sources:
@@ -311,7 +312,7 @@ class ComboStochasticModel(ComboGaussianStochasticModel):
 
     def likelihood(self, samples: np.ndarray) -> np.ndarray:
         _, size = np.shape(samples)
-        llh = np.zeros(size)
+        llh = np.ones(size)
         shift = 0
 
         for source in self._sources:
@@ -329,7 +330,7 @@ class GaussianMixtureStochasticModel(GeneralStochasticModel):
         self._covariance = np.atleast_3d(covariance)
         cov_full = map(lambda x: cov_utils.to_full_covariance(x, covariance_type), covariance)
         self._covariance_full = np.atleast_3d(list(cov_full))
-        self._dimension, _ = np.shape(mean)
+        _, self._dimension = np.shape(self._mean)
         self._weights = np.ones(mixture_size) / mixture_size if weights is None else np.asarray(weights / sum(weights))
 
     def __str__(self) -> str:

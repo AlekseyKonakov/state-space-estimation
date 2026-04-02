@@ -16,10 +16,10 @@ from utils.stat_utils import stat_errors
 def run():
     # np.random.seed(42)  # TODO: DEBUG ONLY
     # todo: check dim of return between different numeric methods
-    # todo: fix generate_sparse_gauss_hermite_points
+    # todo: fix generate_spare_gauss_hermite_points
     # sgh_points, sgh_weights = generate_sparse_gauss_hermite_set(2, 3, 2)
 
-    filter_types = [BayesianFilterType.ukf]  # todo: fix sghqf
+    filter_types = [BayesianFilterType.pf]  # todo: fix sghqf
     # [kf, ekf, ukf, srukf, cdkf, srcdkf, ckf, srckf, fdckf, cqkf, ghqf, sghqf, pf, gspf, sppf, gmsppf  ]
 
     number_of_runs = 500  # 500
@@ -91,7 +91,7 @@ def run():
             elif filter_type is BayesianFilterType.pf:
                 resample_strategy = bf.ResampleStrategy.resolve(bf.ResampleType.residual)
                 pf = bf.Pf(resample_threshold=0.1, resample_strategy=resample_strategy)
-                n_particles = int(2e4)
+                n_particles = int(5e3)
                 particles = np.atleast_2d(multivariate_normal.rvs(x_est[:, 0], size=n_particles))
                 weights = np.tile(1 / n_particles, n_particles)
                 data_set = bf.BootstrapDataSet(particles, weights)

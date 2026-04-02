@@ -2,21 +2,21 @@ from enum import Enum
 
 
 class BayesianFilterType(Enum):
-    kf = 1,
-    ekf = 2,
-    ukf = 3,
-    cdkf = 4,
-    srukf = 5,
-    srcdkf = 6,
-    ckf = 7,
-    srckf = 8,
-    fdckf = 9,
-    cqkf = 10,
-    ghqf = 11,
-    sghqf = 12,
-    pf = 13,
-    gspf = 14,
-    gmsppf = 15,
+    kf = 1
+    ekf = 2
+    ukf = 3
+    cdkf = 4
+    srukf = 5
+    srcdkf = 6
+    ckf = 7
+    srckf = 8
+    fdckf = 9
+    cqkf = 10
+    ghqf = 11
+    sghqf = 12
+    pf = 13
+    gspf = 14
+    gmsppf = 15
     sppf = 16
 
 
